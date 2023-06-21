@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from .forms import UserRegisterForm, PostForm
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 def feed(request):
     posts = Post.objects.all()
@@ -20,6 +22,7 @@ def register(request):
     ctx = { 'form' : form }
     return render(request, 'Social/register.html', ctx)
 
+@login_required
 def post(request):
     current_user = get_object_or_404(User, pk=request.user.pk)
     if request.method == 'POST':
@@ -35,5 +38,31 @@ def post(request):
     return render(request, 'social/post.html', {'form':form})
 
 
-def profile(request):
-    return render(request,'Social/profile.html')
+def profile(request, username=None):
+    current_user = request.user
+    if username and username != current_user:
+        user = User.objects.get(username=username)
+        posts = user.posts.all()
+    else:
+        posts = current_user.posts.all()
+        user = current_user 
+    return render(request,'Social/profile.html', {'user':user, 'posts':posts})
+
+@
+def follow(request, username):
+    current_user = request.user
+    to_user = User.objects.get(username=username)
+    to_user_id = to_user
+    rel = Relationship(from_user=current_user, to_user=to_user_id)
+    rel.save()
+    messages.success(request, f'you are following now {username}')
+    return redirect('feed')
+
+def unfollow(request, username):
+    current_user = request.user
+    to_user = User.objects.get(username=username)
+    to_user_id = to_user.id
+    rel = Relationship.objects.filter(from_user=current_user.id, to_user=to_user_id).get()
+    rel.delete()
+    messages.success(request, f'you are not following {username} anymore')
+    return redirect('feed')
