@@ -5,7 +5,6 @@ This application allows their users to see all the latests posts made, and to re
 
 ## Interface
 ![image](https://github.com/Archi657/SocialAppDjng/assets/40327956/37ed04e1-a978-4613-a5ad-83794e3af9b0)
-![image](https://github.com/Archi657/SocialAppDjng/assets/40327956/8e0e0c1d-07fa-429c-9bde-54eb33b66f9b)
 
 ## Features
 
