@@ -48,7 +48,7 @@ def profile(request, username=None):
         user = current_user 
     return render(request,'Social/profile.html', {'user':user, 'posts':posts})
 
-@
+
 def follow(request, username):
     current_user = request.user
     to_user = User.objects.get(username=username)
